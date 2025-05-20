@@ -1,48 +1,67 @@
-package com.example.demo.controller;
+package controlador;
 
-import com.example.demo.model.DetallePedido;
-import java.util.ArrayList;
+import modelo.DetallePedidos;
+import repositorio.DetallePedidosRepositorio;
+
 import java.util.List;
-import java.util.Optional;
 
-public class DetallePedidoController {
-    private List<DetallePedido> lista = new ArrayList<>();
-    private long idCounter = 1;
+public class DetallePedidosControlador {
+    private DetallePedidosRepositorio repositorio;
 
-    // Obtener todos los detalles
-    public List<DetallePedido> obtenerTodos() {
-        return lista;
+    public DetallePedidosControlador() {
+        this.repositorio = new DetallePedidosRepositorio();
     }
 
-    // Obtener un detalle por ID
-    public DetallePedido obtenerPorId(Long id) {
-        Optional<DetallePedido> resultado = lista.stream()
-            .filter(dp -> dp.getId().equals(id))
-            .findFirst();
-        return resultado.orElse(null);
+    // Crear un nuevo detalle de pedido
+    public void crearDetalle(int idPedido, String producto, int cantidad, double precioUnitario) {
+        DetallePedidos detalle = new DetallePedidos(0, idPedido, producto, cantidad, precioUnitario);
+        repositorio.guardar(detalle);
+        System.out.println("✅ Detalle de pedido creado exitosamente.");
     }
 
-    // Crear un nuevo detalle
-    public DetallePedido crear(DetallePedido nuevoDetalle) {
-        nuevoDetalle.setId(idCounter++);
-        lista.add(nuevoDetalle);
-        return nuevoDetalle;
+    // Obtener detalle por ID
+    public void obtenerDetallePorId(int id) {
+        DetallePedidos detalle = repositorio.buscarPorId(id);
+        if (detalle != null) {
+            mostrarDetalle(detalle);
+        } else {
+            System.out.println("❌ Detalle no encontrado con ID: " + id);
+        }
+    }
+
+    // Listar todos los detalles
+    public void listarDetalles() {
+        List<DetallePedidos> lista = repositorio.obtenerTodos();
+        if (lista.isEmpty()) {
+            System.out.println("❌ No hay detalles de pedidos registrados.");
+        } else {
+            for (DetallePedidos d : lista) {
+                mostrarDetalle(d);
+            }
+        }
     }
 
     // Actualizar un detalle existente
-    public DetallePedido actualizar(Long id, DetallePedido actualizado) {
-        for (int i = 0; i < lista.size(); i++) {
-            if (lista.get(i).getId().equals(id)) {
-                actualizado.setId(id);
-                lista.set(i, actualizado);
-                return actualizado;
-            }
-        }
-        return null;
+    public void actualizarDetalle(int id, int idPedido, String producto, int cantidad, double precioUnitario) {
+        DetallePedidos detalle = new DetallePedidos(id, idPedido, producto, cantidad, precioUnitario);
+        repositorio.actualizar(detalle);
+        System.out.println("🔄 Detalle de pedido actualizado correctamente.");
     }
 
     // Eliminar un detalle por ID
-    public void eliminar(Long id) {
-        lista.removeIf(dp -> dp.getId().equals(id));
+    public void eliminarDetalle(int id) {
+        repositorio.eliminar(id);
+        System.out.println("🗑️ Detalle de pedido eliminado correctamente.");
+    }
+
+    // Método auxiliar para mostrar detalles
+    private void mostrarDetalle(DetallePedidos d) {
+        System.out.println("📦 Detalle ID: " + d.getId());
+        System.out.println("   Pedido ID: " + d.getIdPedido());
+        System.out.println("   Producto: " + d.getProducto());
+        System.out.println("   Cantidad: " + d.getCantidad());
+        System.out.println("   Precio Unitario: $" + d.getPrecioUnitario());
+        System.out.println("   Subtotal: $" + d.getSubtotal());
+        System.out.println("-----------------------------");
     }
 }
