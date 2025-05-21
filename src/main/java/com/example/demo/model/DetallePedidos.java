@@ -1,4 +1,4 @@
-package modelo;
+package com.ejemplo.demo.model;
 
 public class DetallePedidos {
     private int id;
