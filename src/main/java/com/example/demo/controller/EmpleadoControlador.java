@@ -1,4 +1,4 @@
-package controlador;
+package com.example.demo.controller;
 
 import modelo.Empleado;
 import servicio.EmpleadoServicio;
