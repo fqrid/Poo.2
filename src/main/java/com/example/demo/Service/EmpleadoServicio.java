@@ -1,4 +1,4 @@
-package servicio;
+package com.example.demo.service;
 
 import modelo.Empleado;
 import repositorio.EmpleadoRepositorio;
