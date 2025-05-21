@@ -1,4 +1,4 @@
-package com.example.demo.API;
+package com.example.demo.api;
 
 import modelo.DetallePedidos;
 import servicio.DetallePedidosServicio;
